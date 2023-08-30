@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilesAPI
 {
@@ -18,6 +19,16 @@ namespace FilesAPI
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<File>()
+                .HasMany(f => f.Versions)
+                .WithOne(v => v.File)
+                .HasForeignKey(v => v.FileId);
+            modelBuilder.Entity<FileVersion>()
+                .HasOne(v => v.File);
+        }
     }
 
     public class File
@@ -27,7 +38,7 @@ namespace FilesAPI
         public string ContentType { get; set; } = null!;
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
-        public List<FileVersion> Versions { get; set; } = new List<FileVersion>();
+        public virtual ICollection<FileVersion> Versions { get; set; } = new List<FileVersion>();
     }
 
     public class FileVersion
@@ -35,6 +46,7 @@ namespace FilesAPI
         public int Id { get; set; }
         public int FileId { get; set; }
         public int Version { get; set; }
+        [JsonIgnore]
         public File File { get; set; } = null!;
         public string Path { get; set; } = null!;
         public DateTime Created { get; set; }
