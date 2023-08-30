@@ -34,6 +34,7 @@ namespace FilesAPI
     {
         public int Id { get; set; }
         public int FileId { get; set; }
+        public int Version { get; set; }
         public File File { get; set; } = null!;
         public string Path { get; set; } = null!;
         public DateTime Created { get; set; }
