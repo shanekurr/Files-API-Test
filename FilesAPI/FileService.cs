@@ -2,14 +2,13 @@
 
 namespace FilesAPI;
 
-public class FileService
+public class FileService : IFileService
 {
     private readonly FilesContext _context;
 
-    public FileService()
+    public FileService(FilesContext context)
     {
-        _context = new FilesContext();
-        _context.Database.EnsureCreated();
+        _context = context;
     }
 
     public File GetFile(int fileId)

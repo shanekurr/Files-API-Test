@@ -7,11 +7,11 @@ namespace FilesAPI.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-        private readonly FileService _fileService;
+        private readonly IFileService _fileService;
 
-        public FilesController()
+        public FilesController(IFileService fileService)
         {
-            _fileService = new FileService();
+            _fileService = fileService;
         }
 
         [HttpGet("{fileId}", Name = "GetFile")]
